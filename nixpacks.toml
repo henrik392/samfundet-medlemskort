@@ -1,0 +1,39 @@
+# Nixpacks config for building and running the Next.js app in `apps/web`
+# - Installs deps using Bun (respects `bun.lock`)
+# - Uses Node.js 22 for build/runtime
+# - Builds and starts the `apps/web` workspace
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "bun"]
+
+[phases.install]
+# Keep install cache stable and fast
+onlyIncludeFiles = [
+  "package.json",
+  "bun.lock",
+  "bunfig.toml",
+  "apps/web/package.json",
+  "apps/web/next.config.ts",
+  "apps/web/tsconfig.json",
+  "apps/web/postcss.config.mjs",
+  "apps/web/components.json",
+]
+cmds = [
+  "bun install --frozen-lockfile",
+]
+
+[phases.build]
+cmds = [
+  # Build the Next.js app in the `web` workspace
+  "bun run --filter web build",
+]
+
+[start]
+# Ensure we bind to the platform port and to all interfaces inside the container
+cmd = "bun run --filter web start -- -p ${PORT:-3000} -H 0.0.0.0"
+
+[variables]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+
+
