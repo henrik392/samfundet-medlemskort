@@ -6,6 +6,7 @@ import {
   Info,
   LogIn,
   MapPin,
+  Plus,
   Printer,
   Shield,
   Upload,
@@ -271,7 +272,7 @@ export function PrintPreview({
         </Card>
       </div>
 
-      <div className="flex justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
         {onAddAnother && (
           <Button
             onClick={onAddAnother}
@@ -279,25 +280,26 @@ export function PrintPreview({
             type="button"
             variant="outline"
           >
-            Legg til et bilde til
+            <Plus className="mr-1 h-4 w-4" />
+            Legg til bilde
           </Button>
         )}
         <Button onClick={handleDownloadPDF} size="lg" type="button">
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="mr-1 h-4 w-4" />
           Last ned PDF
         </Button>
         <Button onClick={handlePrint} size="lg" type="button" variant="outline">
-          <Printer className="mr-2 h-4 w-4" />
+          <Printer className="mr-1 h-4 w-4" />
           Skriv ut
         </Button>
         <Dialog>
           <DialogTrigger asChild>
             <Button size="lg" type="button" variant="ghost">
-              <Info className="mr-2 h-4 w-4" />
+              <Info className="mr-1 h-4 w-4" />
               NTNU‑utskriftsguide
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[85vh] overflow-y-auto p-4 sm:max-w-lg sm:p-6 md:max-w-2xl">
             <DialogHeader>
               <DialogTitle>Skriv ut på NTNU‑skrivere (myPrint)</DialogTitle>
               <DialogDescription>
