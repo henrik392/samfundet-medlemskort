@@ -16,8 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default:
-      'Samfundet medlemskort – Skriv ut profilbilde i riktig størrelse (2.5×3 cm)',
+    default: 'Samfundet medlemskort – Skriv ut profilbilde 2.5×3cm',
     template: '%s · Samfundet medlemskort',
   },
   description:
