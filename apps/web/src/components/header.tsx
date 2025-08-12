@@ -18,7 +18,9 @@ export default function Header() {
               src="/images/logo_samf.png"
               width={30}
             />
-            <span className="font-bold text-xl tracking-tight">Medlemskort</span>
+            <span className="font-bold text-xl tracking-tight">
+              Medlemskort
+            </span>
           </Link>
 
           <div className="flex items-center gap-4">

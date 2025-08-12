@@ -1,11 +1,29 @@
 'use client';
 
 import jsPDF from 'jspdf';
-import { Download, Printer } from 'lucide-react';
+import {
+  Download,
+  Info,
+  LogIn,
+  MapPin,
+  Printer,
+  Shield,
+  Upload,
+  Wifi,
+} from 'lucide-react';
 import NextImage from 'next/image';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface PrintPreviewProps {
   croppedImages: string[];
@@ -19,6 +37,7 @@ export function PrintPreview({
   onAddAnother,
 }: PrintPreviewProps) {
   const printAreaRef = useRef<HTMLDivElement>(null);
+  const [isTroubleshootingOpen, setIsTroubleshootingOpen] = useState(false);
 
   const handleDownloadPDF = () => {
     try {
@@ -254,18 +273,183 @@ export function PrintPreview({
 
       <div className="flex justify-center gap-4">
         {onAddAnother && (
-          <Button onClick={onAddAnother} size="lg" variant="outline">
+          <Button
+            onClick={onAddAnother}
+            size="lg"
+            type="button"
+            variant="outline"
+          >
             Legg til et bilde til
           </Button>
         )}
-        <Button onClick={handleDownloadPDF} size="lg">
+        <Button onClick={handleDownloadPDF} size="lg" type="button">
           <Download className="mr-2 h-4 w-4" />
           Last ned PDF
         </Button>
-        <Button onClick={handlePrint} size="lg" variant="outline">
+        <Button onClick={handlePrint} size="lg" type="button" variant="outline">
           <Printer className="mr-2 h-4 w-4" />
           Skriv ut
         </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="lg" type="button" variant="ghost">
+              <Info className="mr-2 h-4 w-4" />
+              NTNU‑utskriftsguide
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Skriv ut på NTNU‑skrivere (myPrint)</DialogTitle>
+              <DialogDescription>
+                Kort veiledning for å skrive ut via myPrint.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <ol className="list-decimal space-y-3 pl-5">
+                <li className="flex items-start gap-3">
+                  <Wifi
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                  />
+                  <div>
+                    <p className="font-medium">Koble enheten til NTNU‑nett</p>
+                    <p className="text-muted-foreground text-sm">
+                      Bruk Eduroam, kablet nett, eller NTNU VPN{' '}
+                      <Shield
+                        aria-hidden="true"
+                        className="ml-1 inline h-3.5 w-3.5 align-[-2px]"
+                      />
+                      .
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <LogIn
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                  />
+                  <div>
+                    <p className="font-medium">Åpne myPrint og logg inn</p>
+                    <p className="text-muted-foreground text-sm">
+                      Gå til{' '}
+                      <a
+                        className="underline"
+                        href="https://myprint.ntnu.no"
+                        rel="noopener"
+                        target="_blank"
+                      >
+                        myprint.ntnu.no
+                      </a>{' '}
+                      og logg inn med NTNU‑bruker.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Upload
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                  />
+                  <div>
+                    <p className="font-medium">Last opp dokumentet</p>
+                    <p className="text-muted-foreground text-sm">
+                      Velg «Bla gjennom» og last opp PDF‑en du nettopp lagde
+                      (bruk «Last ned PDF» her hvis du ikke har den).
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Printer
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                  />
+                  <div>
+                    <p className="font-medium">
+                      Velg innstillinger og skriv ut
+                    </p>
+                    <div className="text-muted-foreground text-sm">
+                      <p>
+                        Standard er svart‑hvitt, tosidig og stifting. Endre ved
+                        behov og trykk «Skriv ut».
+                      </p>
+                      <p className="mt-2">
+                        <MapPin
+                          aria-hidden="true"
+                          className="mr-1 inline h-3.5 w-3.5 align-[-2px]"
+                        />
+                        Finn skrivere i{' '}
+                        <a
+                          className="underline"
+                          href="https://use.mazemap.com"
+                          rel="noopener"
+                          target="_blank"
+                        >
+                          MazeMap
+                        </a>
+                        . På skriveren kan du autentisere med studentkort på
+                        kortleseren, eller logge inn med Feide‑bruker på
+                        panelet. Velg «Utskriftsjobber» (Ricoh:
+                        «Follow‑you‑printing») og skriv ut dokumentet.
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ol>
+
+              {/* Feilsøking (shadcn-stil kollaps) */}
+              <div className="rounded-md border bg-muted/30 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-medium">Feilsøking</p>
+                  <Button
+                    aria-controls="ntnu-troubleshooting"
+                    aria-expanded={isTroubleshootingOpen}
+                    onClick={() => setIsTroubleshootingOpen((v) => !v)}
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                  >
+                    {isTroubleshootingOpen ? 'Skjul' : 'Vis'}
+                  </Button>
+                </div>
+                {isTroubleshootingOpen && (
+                  <ul
+                    className="mt-2 list-disc space-y-2 pl-5 text-muted-foreground text-sm"
+                    id="ntnu-troubleshooting"
+                  >
+                    <li>
+                      Får du ikke logget inn? Sjekk at du er på Eduroam/kablet
+                      nett, eller aktiver NTNU VPN.
+                    </li>
+                    <li>
+                      Jobben vises ikke i myPrint? Vent et par sekunder og
+                      oppdater siden.
+                    </li>
+                    <li>
+                      Feil utskriftsoppsett? Kontroller farge/tosidig/stifting
+                      før du sender jobben.
+                    </li>
+                    <li>
+                      Formatproblemer? Last ned og last opp PDF i stedet for
+                      andre filtyper.
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button asChild variant="link">
+                <a
+                  href="https://myprint.ntnu.no"
+                  rel="noopener"
+                  target="_blank"
+                >
+                  Åpne myprint.ntnu.no
+                </a>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
