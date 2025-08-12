@@ -503,7 +503,8 @@ export function PrintPreview({
                 <div className="space-y-1">
                   <h3 className="font-semibold text-lg">Klipp ut bildet</h3>
                   <p className="text-muted-foreground">
-                    Klipp nøyaktig langs kantene for å få riktig størrelse (2,5×3 cm).
+                    Klipp nøyaktig langs kantene for å få riktig størrelse
+                    (2,5×3 cm).
                   </p>
                 </div>
               </div>
@@ -515,7 +516,8 @@ export function PrintPreview({
                 <div className="space-y-1">
                   <h3 className="font-semibold text-lg">Fest bildet</h3>
                   <p className="text-muted-foreground">
-                    Bruk transparent teip over bildet eller plastfilm fra Akademika for å beskytte det.
+                    Bruk transparent teip over bildet eller plastfilm fra
+                    Akademika for å beskytte det.
                   </p>
                 </div>
               </div>
@@ -527,7 +529,8 @@ export function PrintPreview({
                 <h3 className="font-semibold text-lg">Videoveiledning</h3>
               </div>
               <p className="mb-4 text-muted-foreground">
-                Se hvordan du klipper ut og fester bildet riktig i denne videoen:
+                Se hvordan du klipper ut og fester bildet riktig i denne
+                videoen:
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild size="default" variant="outline">
@@ -540,11 +543,7 @@ export function PrintPreview({
                   </a>
                 </Button>
                 <Button asChild variant="link">
-                  <a
-                    href="https://akademika.no"
-                    rel="noopener"
-                    target="_blank"
-                  >
+                  <a href="https://akademika.no" rel="noopener" target="_blank">
                     Akademika.no
                   </a>
                 </Button>

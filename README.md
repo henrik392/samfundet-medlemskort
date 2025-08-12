@@ -44,25 +44,6 @@ bun check
 bun check-types
 ```
 
-## Alternative: Run with pnpm (web app only)
-
-If you prefer pnpm, run the app directly from `apps/web`:
-
-```bash
-cd apps/web
-pnpm install
-pnpm dev
-```
-
-Production:
-
-```bash
-pnpm build
-pnpm start
-```
-
-Note: The root workspace scripts are set up for Bun. pnpm usage is fine when working inside `apps/web`.
-
 ## Project Structure
 
 ```
