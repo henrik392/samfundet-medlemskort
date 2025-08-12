@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ModeToggle } from './mode-toggle';
+import { GitHubButton } from './github-button';
 
 export default function Header() {
   return (
@@ -14,7 +14,7 @@ export default function Header() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <ModeToggle />
+            <GitHubButton />
           </div>
         </div>
       </div>
