@@ -135,14 +135,14 @@ export function PhotoCropper({
         <div className="space-y-2 text-center">
           <h1 className="font-bold text-3xl">Medlemskortbilder</h1>
           <p className="text-muted-foreground">
-            Slipp bildet ditt for å komme i gang
+            Velg et bilde som tydelig viser ansiktet ditt
           </p>
         </div>
 
-        <Card>
+        <Card className="border-none py-0">
           <div
             {...getRootProps()}
-            className={`flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-12 transition-colors ${
+            className={`flex h-full min-h-[400px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-12 transition-colors ${
               isDragActive
                 ? 'border-primary bg-primary/5'
                 : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
