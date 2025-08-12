@@ -68,7 +68,9 @@ export function PhotoCropper({
       'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
     },
     maxFiles: 1,
+    multiple: false,
     onDrop: (acceptedFiles: FileWithPath[]) => {
+      // Only process the first file, ensuring single file upload
       if (acceptedFiles.length > 0 && onFileSelected) {
         onFileSelected(acceptedFiles[0]);
       }
