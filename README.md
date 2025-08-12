@@ -1,4 +1,4 @@
-# samfundet-bilde
+# samfundet-medlemskort
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, and more.
 
@@ -32,7 +32,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the w
 ## Project Structure
 
 ```
-samfundet-bilde/
+samfundet-medlemskort/
 ├── apps/
 │   ├── web/         # Frontend application (Next.js)
 ```

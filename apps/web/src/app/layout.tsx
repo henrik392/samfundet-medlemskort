@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'samfundet-bilde',
-  description: 'samfundet-bilde',
+  title: 'Medlemskort',
+  description: 'Print bilde for samfundets medlemskort',
 };
 
 export default function RootLayout({

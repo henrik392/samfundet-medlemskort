@@ -166,72 +166,73 @@ export function PrintPreview({
   const rows = Math.ceil(croppedImages.length / photosPerRow);
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4">
+    <div className="mx-auto w-full max-w-4xl space-y-4">
       <div className="space-y-2 text-center">
         <h2 className="font-bold text-xl">Ready to Print</h2>
         <p className="text-muted-foreground text-sm">
-          {croppedImages.length} photo{croppedImages.length !== 1 ? 's' : ''} ready for A4 printing
+          {croppedImages.length} photo{croppedImages.length !== 1 ? 's' : ''}{' '}
+          ready for A4 printing
         </p>
       </div>
 
       <div className="flex justify-center">
         <Card className="w-fit">
-        <div
-          className="relative mx-auto overflow-hidden bg-white print:border-0"
-          ref={printAreaRef}
-          style={{
-            width: '420px', // A4 width scaled down (~50% of 210mm at 96dpi)
-            height: '594px', // A4 height scaled down (~50% of 297mm at 96dpi)
-            aspectRatio: '210/297',
-          }}
-        >
-          {/* A4 Paper simulation */}
-          <div className="h-full p-4">
-            <div
-              className="grid h-full content-start gap-2"
-              style={{
-                gridTemplateColumns: `repeat(${photosPerRow}, 1fr)`,
-              }}
-            >
-              {croppedImages.map((imageSrc, index) => (
-                <div
-                  className="overflow-hidden border border-gray-200 bg-white"
-                  key={index}
-                  style={{
-                    width: '25mm', // 2.5cm
-                    height: '30mm', // 3cm
-                    aspectRatio: '2.5/3',
-                  }}
-                >
-                  <img
-                    alt={`Member card ${index + 1}`}
-                    className="h-full w-full object-cover"
-                    src={imageSrc}
-                    style={{ imageRendering: 'crisp-edges' }}
-                  />
-                </div>
-              ))}
-            </div>
+          <div
+            className="relative mx-auto overflow-hidden bg-white print:border-0"
+            ref={printAreaRef}
+            style={{
+              width: '420px', // A4 width scaled down (~50% of 210mm at 96dpi)
+              height: '594px', // A4 height scaled down (~50% of 297mm at 96dpi)
+              aspectRatio: '210/297',
+            }}
+          >
+            {/* A4 Paper simulation */}
+            <div className="h-full p-4">
+              <div
+                className="grid h-full content-start gap-2"
+                style={{
+                  gridTemplateColumns: `repeat(${photosPerRow}, 1fr)`,
+                }}
+              >
+                {croppedImages.map((imageSrc, index) => (
+                  <div
+                    className="overflow-hidden border border-gray-200 bg-white"
+                    key={index}
+                    style={{
+                      width: '25mm', // 2.5cm
+                      height: '30mm', // 3cm
+                      aspectRatio: '2.5/3',
+                    }}
+                  >
+                    <img
+                      alt={`Member card ${index + 1}`}
+                      className="h-full w-full object-cover"
+                      src={imageSrc}
+                      style={{ imageRendering: 'crisp-edges' }}
+                    />
+                  </div>
+                ))}
+              </div>
 
-            {/* Cutting guidelines */}
-            <div className="pointer-events-none absolute inset-0 print:hidden">
-              {Array.from({ length: photosPerRow + 1 }).map((_, i) => (
-                <div
-                  className="absolute top-0 bottom-0 border-gray-400 border-l border-dashed opacity-30"
-                  key={`vertical-${i}`}
-                  style={{ left: `${(i / photosPerRow) * 100}%` }}
-                />
-              ))}
-              {Array.from({ length: rows + 1 }).map((_, i) => (
-                <div
-                  className="absolute right-0 left-0 border-gray-400 border-t border-dashed opacity-30"
-                  key={`horizontal-${i}`}
-                  style={{ top: `${(i / rows) * 100}%` }}
-                />
-              ))}
+              {/* Cutting guidelines */}
+              <div className="pointer-events-none absolute inset-0 print:hidden">
+                {Array.from({ length: photosPerRow + 1 }).map((_, i) => (
+                  <div
+                    className="absolute top-0 bottom-0 border-gray-400 border-l border-dashed opacity-30"
+                    key={`vertical-${i}`}
+                    style={{ left: `${(i / photosPerRow) * 100}%` }}
+                  />
+                ))}
+                {Array.from({ length: rows + 1 }).map((_, i) => (
+                  <div
+                    className="absolute right-0 left-0 border-gray-400 border-t border-dashed opacity-30"
+                    key={`horizontal-${i}`}
+                    style={{ top: `${(i / rows) * 100}%` }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         </Card>
       </div>
 
