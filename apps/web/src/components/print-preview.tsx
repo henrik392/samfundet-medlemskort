@@ -18,6 +18,7 @@ import {
 import NextImage from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -477,97 +478,80 @@ export function PrintPreview({
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                  size="sm"
-                  type="button"
-                  variant="ghost"
-                >
-                  <Scissors className="mr-1.5 h-3.5 w-3.5" />
-                  Klipp og fest
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-h-[85vh] overflow-y-auto p-4 sm:max-w-lg sm:p-6 md:max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Neste steg etter utskrift</DialogTitle>
-                  <DialogDescription>
-                    Slik klipper du ut og ferdigstiller medlemskortet.
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-4">
-                  <ol className="list-decimal space-y-3 pl-5">
-                    <li className="flex items-start gap-3">
-                      <Scissors
-                        aria-hidden="true"
-                        className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
-                      />
-                      <div>
-                        <p className="font-medium">Klipp ut bildet</p>
-                        <p className="text-muted-foreground text-sm">
-                          Klipp nøyaktig langs kantene for å få riktig størrelse
-                          (2,5×3 cm).
-                        </p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div
-                        aria-hidden="true"
-                        className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-2 border-muted-foreground/40"
-                      />
-                      <div>
-                        <p className="font-medium">Fest bildet</p>
-                        <p className="text-muted-foreground text-sm">
-                          Bruk transparent teip over bildet eller plastfilm fra
-                          Akademika for å beskytte det.
-                        </p>
-                      </div>
-                    </li>
-                  </ol>
-
-                  <div className="rounded-md border bg-muted/30 p-4">
-                    <div className="flex items-center gap-2">
-                      <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                      <p className="font-medium">Videoveiledning</p>
-                    </div>
-                    <p className="mt-2 text-muted-foreground text-sm">
-                      Se hvordan du klipper ut og fester bildet riktig i denne
-                      videoen:
-                    </p>
-                    <Button
-                      asChild
-                      className="mt-2"
-                      size="sm"
-                      variant="outline"
-                    >
-                      <a
-                        href="https://youtu.be/Nh7hgZABbZk?si=d7iE2zU0IgRnT9A-&t=127"
-                        rel="noopener"
-                        target="_blank"
-                      >
-                        Se video (YouTube)
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <Button asChild variant="link">
-                    <a
-                      href="https://akademika.no"
-                      rel="noopener"
-                      target="_blank"
-                    >
-                      Akademika.no
-                    </a>
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
+      </div>
+
+      {/* Klipp og fest section */}
+      <div className="mx-auto mt-12 max-w-2xl">
+        <Card className="bg-muted/30 p-8">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="font-bold text-2xl tracking-tight">
+                Neste steg etter utskrift
+              </h2>
+              <p className="text-muted-foreground">
+                Slik klipper du ut og ferdigstiller medlemskortet
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Scissors className="h-5 w-5 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-lg">Klipp ut bildet</h3>
+                  <p className="text-muted-foreground">
+                    Klipp nøyaktig langs kantene for å få riktig størrelse (2,5×3 cm).
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <div className="h-4 w-4 rounded-sm border-2 border-primary" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-lg">Fest bildet</h3>
+                  <p className="text-muted-foreground">
+                    Bruk transparent teip over bildet eller plastfilm fra Akademika for å beskytte det.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border bg-muted/30 p-6">
+              <div className="mb-3 flex items-center gap-3">
+                <ExternalLink className="h-5 w-5 text-muted-foreground" />
+                <h3 className="font-semibold text-lg">Videoveiledning</h3>
+              </div>
+              <p className="mb-4 text-muted-foreground">
+                Se hvordan du klipper ut og fester bildet riktig i denne videoen:
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="default" variant="outline">
+                  <a
+                    href="https://youtu.be/Nh7hgZABbZk?si=d7iE2zU0IgRnT9A-&t=127"
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    Se video (YouTube)
+                  </a>
+                </Button>
+                <Button asChild variant="link">
+                  <a
+                    href="https://akademika.no"
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    Akademika.no
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
