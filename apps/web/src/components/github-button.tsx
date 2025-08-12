@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 // Repository configuration
-const REPO_OWNER = 'henrikkvamme';
+const REPO_OWNER = 'henrik392';
 const REPO_NAME = 'samfundet-medlemskort';
 const REPO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}`;
 
