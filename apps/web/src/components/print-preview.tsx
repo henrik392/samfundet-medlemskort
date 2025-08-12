@@ -3,11 +3,13 @@
 import jsPDF from 'jspdf';
 import {
   Download,
+  ExternalLink,
   Info,
   LogIn,
   MapPin,
   Plus,
   Printer,
+  Scissors,
   Shield,
   Upload,
   Wifi,
@@ -100,7 +102,6 @@ export function PrintPreview({
     }
 
     // Lag utskrifts-HTML med nøyaktige mål
-    const _photosPerRow = 8;
 
     let printHTML = `
       <!DOCTYPE html>
@@ -151,6 +152,7 @@ export function PrintPreview({
         </body>
       </html>`;
 
+    printWindow.document.open();
     printWindow.document.write(printHTML);
 
     printWindow.document.close();
@@ -180,10 +182,6 @@ export function PrintPreview({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handlePrint]);
-
-  // Oppdag om brukeren er på Mac eller PC (for hurtigtaster)
-  const _isMac =
-    typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac');
 
   // Calculate grid layout - 8 photos per row, multiple rows
   const photosPerRow = 8;
@@ -447,6 +445,81 @@ export function PrintPreview({
                   target="_blank"
                 >
                   Åpne myprint.ntnu.no
+                </a>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="lg" type="button" variant="ghost">
+              <Scissors className="mr-1 h-4 w-4" />
+              Neste steg
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-h-[85vh] overflow-y-auto p-4 sm:max-w-lg sm:p-6 md:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Neste steg etter utskrift</DialogTitle>
+              <DialogDescription>
+                Slik klipper du ut og ferdigstiller medlemskortet.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <ol className="list-decimal space-y-3 pl-5">
+                <li className="flex items-start gap-3">
+                  <Scissors
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                  />
+                  <div>
+                    <p className="font-medium">Klipp ut bildet</p>
+                    <p className="text-muted-foreground text-sm">
+                      Klipp nøyaktig langs kantene for å få riktig størrelse
+                      (2,5×3 cm).
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div
+                    aria-hidden="true"
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded-sm border-2 border-muted-foreground/40"
+                  />
+                  <div>
+                    <p className="font-medium">Fest bildet</p>
+                    <p className="text-muted-foreground text-sm">
+                      Bruk transparent teip over bildet eller plastfilm fra
+                      Akademika for å beskytte det.
+                    </p>
+                  </div>
+                </li>
+              </ol>
+
+              <div className="rounded-md border bg-muted/30 p-4">
+                <div className="flex items-center gap-2">
+                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  <p className="font-medium">Videoveiledning</p>
+                </div>
+                <p className="mt-2 text-muted-foreground text-sm">
+                  Se hvordan du klipper ut og fester bildet riktig i denne
+                  videoen:
+                </p>
+                <Button asChild className="mt-2" size="sm" variant="outline">
+                  <a
+                    href="https://youtu.be/Nh7hgZABbZk?si=d7iE2zU0IgRnT9A-&t=127"
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    Se video (YouTube)
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button asChild variant="link">
+                <a href="https://akademika.no" rel="noopener" target="_blank">
+                  Akademika.no
                 </a>
               </Button>
             </DialogFooter>
