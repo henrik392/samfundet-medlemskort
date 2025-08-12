@@ -2,6 +2,7 @@
 
 import jsPDF from 'jspdf';
 import { Download, Printer } from 'lucide-react';
+import NextImage from 'next/image';
 import { useCallback, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -58,17 +59,17 @@ export function PrintPreview({
         );
       }
 
-      pdf.save('samfundet-member-cards.pdf');
+      pdf.save('samfundet-medlemskort.pdf');
     } catch (_error) {
-      alert('Failed to generate PDF. Please try again.');
+      alert('Kunne ikke generere PDF. Prøv igjen.');
     }
   };
 
   const handlePrint = useCallback(() => {
-    // Create a new window for printing
+    // Åpne et nytt vindu for utskrift
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
-      alert('Please allow popups to enable printing');
+      alert('Tillat sprettoppvinduer for å skrive ut');
       return;
     }
 
@@ -78,14 +79,14 @@ export function PrintPreview({
       return;
     }
 
-    // Create print HTML with exact dimensions
+    // Lag utskrifts-HTML med nøyaktige mål
     const _photosPerRow = 8;
 
     let printHTML = `
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Samfundet Member Cards</title>
+          <title>Samfundet medlemskort</title>
           <style>
             @page {
               size: A4;
@@ -110,8 +111,8 @@ export function PrintPreview({
               border: 1px solid #ddd;
             }
             @media print {
-              body { 
-                margin: 0; 
+              body {
+                margin: 0;
                 -webkit-print-color-adjust: exact;
               }
             }
@@ -120,9 +121,9 @@ export function PrintPreview({
         <body>
           <div class="print-container">`;
 
-    // Add each image
+    // Legg til hvert bilde
     croppedImages.forEach((imageSrc, index) => {
-      printHTML += `<img class="photo" src="${imageSrc}" alt="Member card ${index + 1}" />`;
+      printHTML += `<img class="photo" src="${imageSrc}" alt="Medlemskort ${index + 1}" />`;
     });
 
     printHTML += `
@@ -138,11 +139,14 @@ export function PrintPreview({
     setTimeout(() => {
       printWindow.focus();
       printWindow.print();
+      if (typeof onPrint === 'function') {
+        onPrint();
+      }
       printWindow.close();
     }, 1000);
-  }, [croppedImages]);
+  }, [croppedImages, onPrint]);
 
-  // Override Ctrl+P/Cmd+P to print the PDF content
+  // Overstyr Ctrl+P/Cmd+P for å skrive ut innholdet
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
@@ -157,21 +161,29 @@ export function PrintPreview({
     };
   }, [handlePrint]);
 
-  // Detect if user is on Mac or PC for keyboard shortcut display
+  // Oppdag om brukeren er på Mac eller PC (for hurtigtaster)
   const _isMac =
     typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac');
 
   // Calculate grid layout - 8 photos per row, multiple rows
   const photosPerRow = 8;
   const rows = Math.ceil(croppedImages.length / photosPerRow);
+  const verticalGuides = Array.from(
+    { length: photosPerRow + 1 },
+    (_, k) => (k / photosPerRow) * 100
+  );
+  const horizontalGuides = Array.from(
+    { length: rows + 1 },
+    (_, k) => (k / rows) * 100
+  );
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-4">
       <div className="space-y-2 text-center">
-        <h2 className="font-bold text-xl">Ready to Print</h2>
+        <h2 className="font-bold text-xl">Klar for utskrift</h2>
         <p className="text-muted-foreground text-sm">
-          {croppedImages.length} photo{croppedImages.length !== 1 ? 's' : ''}{' '}
-          ready for A4 printing
+          {croppedImages.length} bilde{croppedImages.length !== 1 ? 'r' : ''}{' '}
+          klare for A4‑utskrift
         </p>
       </div>
 
@@ -186,7 +198,7 @@ export function PrintPreview({
               aspectRatio: '210/297',
             }}
           >
-            {/* A4 Paper simulation */}
+            {/* A4‑papir-simulering */}
             <div className="h-full p-4">
               <div
                 className="grid h-full content-start gap-2"
@@ -194,40 +206,44 @@ export function PrintPreview({
                   gridTemplateColumns: `repeat(${photosPerRow}, 1fr)`,
                 }}
               >
-                {croppedImages.map((imageSrc, index) => (
+                {croppedImages.map((imageSrc) => (
                   <div
                     className="overflow-hidden border border-gray-200 bg-white"
-                    key={index}
+                    key={imageSrc}
                     style={{
                       width: '25mm', // 2.5cm
                       height: '30mm', // 3cm
                       aspectRatio: '2.5/3',
                     }}
                   >
-                    <img
-                      alt={`Member card ${index + 1}`}
-                      className="h-full w-full object-cover"
-                      src={imageSrc}
-                      style={{ imageRendering: 'crisp-edges' }}
-                    />
+                    <div className="relative h-full w-full">
+                      <NextImage
+                        alt="Medlemskortbilde"
+                        className="object-cover"
+                        fill
+                        sizes="25mm"
+                        src={imageSrc}
+                        unoptimized
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
 
-              {/* Cutting guidelines */}
+              {/* Skjærelinjer */}
               <div className="pointer-events-none absolute inset-0 print:hidden">
-                {Array.from({ length: photosPerRow + 1 }).map((_, i) => (
+                {verticalGuides.map((leftPct) => (
                   <div
                     className="absolute top-0 bottom-0 border-gray-400 border-l border-dashed opacity-30"
-                    key={`vertical-${i}`}
-                    style={{ left: `${(i / photosPerRow) * 100}%` }}
+                    key={`vertical-${leftPct}`}
+                    style={{ left: `${leftPct}%` }}
                   />
                 ))}
-                {Array.from({ length: rows + 1 }).map((_, i) => (
+                {horizontalGuides.map((topPct) => (
                   <div
                     className="absolute right-0 left-0 border-gray-400 border-t border-dashed opacity-30"
-                    key={`horizontal-${i}`}
-                    style={{ top: `${(i / rows) * 100}%` }}
+                    key={`horizontal-${topPct}`}
+                    style={{ top: `${topPct}%` }}
                   />
                 ))}
               </div>
@@ -239,16 +255,16 @@ export function PrintPreview({
       <div className="flex justify-center gap-4">
         {onAddAnother && (
           <Button onClick={onAddAnother} size="lg" variant="outline">
-            Add Another Photo
+            Legg til et bilde til
           </Button>
         )}
         <Button onClick={handleDownloadPDF} size="lg">
           <Download className="mr-2 h-4 w-4" />
-          Download PDF
+          Last ned PDF
         </Button>
         <Button onClick={handlePrint} size="lg" variant="outline">
           <Printer className="mr-2 h-4 w-4" />
-          Print
+          Skriv ut
         </Button>
       </div>
     </div>

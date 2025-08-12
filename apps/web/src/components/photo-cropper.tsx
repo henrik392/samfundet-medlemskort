@@ -1,6 +1,7 @@
 'use client';
 
 import { ImageIcon, Upload } from 'lucide-react';
+import NextImage from 'next/image';
 import React, { type SyntheticEvent } from 'react';
 import { type FileWithPath, useDropzone } from 'react-dropzone';
 import ReactCrop, {
@@ -46,14 +47,14 @@ export function PhotoCropper({
   selectedFile,
   showSimpleUpload = false,
 }: PhotoCropperProps) {
-  const aspect = 2.5 / 3; // 2.5cm width, 3cm height for member cards
+  const aspect = 2.5 / 3; // 2,5 cm bredde, 3 cm høyde for medlemskort
 
   const imgRef = React.useRef<HTMLImageElement | null>(null);
   const [crop, setCrop] = React.useState<Crop>();
   const [croppedImageUrl, setCroppedImageUrl] = React.useState<string>('');
   const [previewUrl, setPreviewUrl] = React.useState<string>('');
 
-  // Set up preview URL when selectedFile changes
+  // Sett opp forhåndsvisnings-URL når valgt fil endres
   React.useEffect(() => {
     if (selectedFile) {
       const url = URL.createObjectURL(selectedFile);
@@ -127,14 +128,14 @@ export function PhotoCropper({
     }
   };
 
-  // Simple upload view
+  // Enkel opplastingsvisning
   if (showSimpleUpload) {
     return (
       <div className="w-full max-w-2xl space-y-4">
         <div className="space-y-2 text-center">
-          <h1 className="font-bold text-3xl">Member Card Photos</h1>
+          <h1 className="font-bold text-3xl">Medlemskortbilder</h1>
           <p className="text-muted-foreground">
-            Drop your photo to get started
+            Slipp bildet ditt for å komme i gang
           </p>
         </div>
 
@@ -164,18 +165,18 @@ export function PhotoCropper({
               <div className="space-y-3">
                 <h3 className="font-medium text-xl">
                   {isDragActive
-                    ? 'Drop your photo here'
-                    : 'Drag & drop your photo'}
+                    ? 'Slipp bildet ditt her'
+                    : 'Dra og slipp bildet ditt'}
                 </h3>
                 <p className="text-muted-foreground">
-                  or click to browse your files
+                  eller klikk for å bla gjennom filene dine
                 </p>
               </div>
 
               {!isDragActive && (
                 <Button size="lg">
                   <Upload className="mr-2 h-4 w-4" />
-                  Choose Photo
+                  Velg bilde
                 </Button>
               )}
             </div>
@@ -185,13 +186,13 @@ export function PhotoCropper({
     );
   }
 
-  // Crop view
+  // Beskjæringsvisning
   return (
     <div className="w-full max-w-4xl space-y-6">
       <div className="space-y-2 text-center">
-        <h2 className="font-bold text-2xl">Crop Your Photo</h2>
+        <h2 className="font-bold text-2xl">Beskjær bildet ditt</h2>
         <p className="text-muted-foreground">
-          Adjust the crop area to fit member card size
+          Juster beskjæringsområdet til medlemskortstørrelse
         </p>
       </div>
 
@@ -206,8 +207,9 @@ export function PhotoCropper({
               onChange={(_, percentCrop) => setCrop(percentCrop)}
               onComplete={(c) => onCropCompleteHandler(c)}
             >
+              {/* biome-ignore lint: react-image-crop requires a plain <img> with onLoad */}
               <img
-                alt="Crop preview"
+                alt="Forhåndsvisning av beskjæring"
                 className="max-h-96 w-auto"
                 onLoad={onImageLoad}
                 ref={imgRef}
@@ -218,19 +220,22 @@ export function PhotoCropper({
 
           {croppedImageUrl && (
             <div className="flex flex-col items-center space-y-3">
-              <p className="font-medium">Preview (2.5cm × 3cm):</p>
+              <p className="font-medium">Forhåndsvisning (2,5 cm × 3 cm):</p>
               <div
-                className="border-2 border-gray-200 bg-white shadow-sm"
+                className="relative border-2 border-gray-200 bg-white shadow-sm"
                 style={{
                   width: '60px',
                   height: '72px',
                   aspectRatio: '2.5/3',
                 }}
               >
-                <img
-                  alt="Cropped preview"
-                  className="h-full w-full object-cover"
+                <NextImage
+                  alt="Forhåndsvisning av utsnitt"
+                  className="object-cover"
+                  fill
+                  sizes="60px"
                   src={croppedImageUrl}
+                  unoptimized
                 />
               </div>
             </div>
@@ -241,7 +246,7 @@ export function PhotoCropper({
             onClick={handleCropSave}
             size="lg"
           >
-            Save & Continue
+            Lagre og fortsett
           </Button>
         </div>
       )}
