@@ -211,8 +211,8 @@ export function PrintPreview({
             className="relative mx-auto overflow-hidden bg-white print:border-0"
             ref={printAreaRef}
             style={{
-              width: '420px', // A4 width scaled down (~50% of 210mm at 96dpi)
-              height: '594px', // A4 height scaled down (~50% of 297mm at 96dpi)
+              width: '320px', // A4 width scaled down (~38% of 210mm at 96dpi)
+              height: '453px', // A4 height scaled down (~38% of 297mm at 96dpi)
               aspectRatio: '210/297',
             }}
           >
@@ -271,7 +271,7 @@ export function PrintPreview({
       </div>
 
       {/* Primary Actions */}
-      <div className="flex flex-col items-center space-y-6">
+      <div className="flex flex-col items-center space-y-4">
         <div className="flex flex-col items-center gap-3 sm:flex-row">
           <Button
             className="min-w-[160px] shadow-md transition-shadow hover:shadow-lg"
@@ -292,6 +292,12 @@ export function PrintPreview({
             <Printer className="mr-2 h-4 w-4" />
             Skriv ut
           </Button>
+        </div>
+
+        {/* Visual separator with scroll hint */}
+        <div className="flex flex-col items-center space-y-3 pt-2">
+          <div className="h-px w-16 bg-border" />
+          <p className="text-muted-foreground text-sm">Mer hjelp nedenfor</p>
         </div>
 
         {/* Secondary Actions */}
@@ -486,7 +492,7 @@ export function PrintPreview({
                   variant="ghost"
                 >
                   <Scissors className="mr-1.5 h-3.5 w-3.5" />
-                  Neste steg
+                  Klipp og fest
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[85vh] overflow-y-auto p-4 sm:max-w-lg sm:p-6 md:max-w-2xl">
