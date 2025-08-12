@@ -80,6 +80,14 @@ export default function Home() {
         {currentState === 'crop' && selectedFile && (
           <PhotoCropper
             onCropComplete={handleCropComplete}
+            onFileSelected={(file) => {
+              if (file) {
+                setSelectedFile(file);
+              } else {
+                setSelectedFile(null);
+                setCurrentState('upload');
+              }
+            }}
             selectedFile={selectedFile}
             showSimpleUpload={false}
           />

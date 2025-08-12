@@ -48,7 +48,6 @@ export function PhotoCropper({
   showSimpleUpload = false,
 }: PhotoCropperProps) {
   const aspect = 2.5 / 3; // 2,5 cm bredde, 3 cm høyde for medlemskort
-
   const imgRef = React.useRef<HTMLImageElement | null>(null);
   const [crop, setCrop] = React.useState<Crop>();
   const [croppedImageUrl, setCroppedImageUrl] = React.useState<string>('');
@@ -127,6 +126,18 @@ export function PhotoCropper({
   const handleCropSave = () => {
     if (croppedImageUrl && onCropComplete) {
       onCropComplete(croppedImageUrl);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    // Reset all state and go back to upload stage
+    setCrop(undefined);
+    setCroppedImageUrl('');
+    setPreviewUrl('');
+
+    // Notify parent component to clear the selected file
+    if (onFileSelected) {
+      onFileSelected(undefined as unknown as File);
     }
   };
 
@@ -247,13 +258,19 @@ export function PhotoCropper({
             </div>
           )}
 
-          <Button
-            disabled={!croppedImageUrl}
-            onClick={handleCropSave}
-            size="lg"
-          >
-            Lagre og fortsett
-          </Button>
+          <div className="flex gap-3">
+            <Button onClick={handleRemoveImage} size="lg" variant="outline">
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Velg annet bilde
+            </Button>
+            <Button
+              disabled={!croppedImageUrl}
+              onClick={handleCropSave}
+              size="lg"
+            >
+              Lagre og fortsett
+            </Button>
+          </div>
         </div>
       )}
     </div>
