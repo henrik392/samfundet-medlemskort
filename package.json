@@ -16,8 +16,10 @@
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "lucide-react": "^0.539.0",
-    "react-easy-crop": "^5.5.0"
+    "react-dropzone": "^14.3.8",
+    "react-image-crop": "^11.0.10"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.3",

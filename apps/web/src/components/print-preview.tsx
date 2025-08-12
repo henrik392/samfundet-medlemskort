@@ -1,7 +1,9 @@
 'use client';
 
 import html2canvas from 'html2canvas';
-import { useRef } from 'react';
+import jsPDF from 'jspdf';
+import { Download, Printer } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -13,7 +15,7 @@ interface PrintPreviewProps {
 export function PrintPreview({ croppedImages, onPrint }: PrintPreviewProps) {
   const printAreaRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = async () => {
+  const handleDownloadPDF = async () => {
     if (!printAreaRef.current) {
       return;
     }
@@ -27,17 +29,41 @@ export function PrintPreview({ croppedImages, onPrint }: PrintPreviewProps) {
         height: 1123, // A4 height in pixels at 96 DPI
       });
 
-      const link = document.createElement('a');
-      link.download = 'samfundet-member-cards.png';
-      link.href = canvas.toDataURL();
-      link.click();
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
 
-      window.print();
+      // A4 dimensions: 210mm x 297mm
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+      pdf.save('samfundet-member-cards.pdf');
+
       onPrint();
     } catch (_error) {
-      // Handle print error silently
+      // Handle PDF generation error silently
     }
   };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // Override Ctrl+P/Cmd+P to print the PDF content
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+        event.preventDefault();
+        handlePrint();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePrint]);
+
+  // Detect if user is on Mac or PC for keyboard shortcut display
+  const isMac =
+    typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac');
 
   // Calculate grid layout - 8 photos per row, multiple rows
   const photosPerRow = 8;
@@ -116,12 +142,14 @@ export function PrintPreview({ croppedImages, onPrint }: PrintPreviewProps) {
           <Button
             className="flex-1"
             disabled={croppedImages.length === 0}
-            onClick={handlePrint}
+            onClick={handleDownloadPDF}
           >
-            Print A4 Sheet ({croppedImages.length} photos)
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF ({croppedImages.length} photos)
           </Button>
-          <Button onClick={() => window.print()} variant="outline">
-            Browser Print
+          <Button onClick={handlePrint} variant="outline">
+            <Printer className="mr-2 h-4 w-4" />
+            Print ({isMac ? 'Cmd+P' : 'Ctrl+P'})
           </Button>
         </div>
 

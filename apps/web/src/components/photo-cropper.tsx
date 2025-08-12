@@ -1,179 +1,166 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import type { Area, Point } from 'react-easy-crop';
-import Cropper from 'react-easy-crop';
-import { ImageUpload } from '@/components/image-upload';
+import { ImageIcon, Plus, Upload } from 'lucide-react';
+import { useState } from 'react';
+import { type FileWithPath, useDropzone } from 'react-dropzone';
+import {
+  type FileWithPreview,
+  ImageCropper,
+} from '@/components/image-cropper-new';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 
 interface PhotoCropperProps {
   onCropComplete: (croppedImage: string) => void;
 }
 
-const createImage = (url: string): Promise<HTMLImageElement> =>
-  new Promise((resolve, reject) => {
-    const image = new Image();
-    image.addEventListener('load', () => resolve(image));
-    image.addEventListener('error', (error) => reject(error));
-    image.setAttribute('crossOrigin', 'anonymous');
-    image.src = url;
-  });
-
-const getCroppedImg = async (
-  imageSrc: string,
-  pixelCrop: Area
-): Promise<string> => {
-  const image = await createImage(imageSrc);
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error('Could not get canvas context');
-  }
-
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
-
-  ctx.drawImage(
-    image,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
-    0,
-    0,
-    pixelCrop.width,
-    pixelCrop.height
-  );
-
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      if (blob) {
-        const url = URL.createObjectURL(blob);
-        resolve(url);
-      }
-    });
-  });
-};
-
 export function PhotoCropper({ onCropComplete }: PhotoCropperProps) {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileWithPreview | null>(
+    null
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [croppedImages, setCroppedImages] = useState<string[]>([]);
 
-  const onCropCompleteCallback = useCallback((_: Area, pixels: Area) => {
-    setCroppedAreaPixels(pixels);
-  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
+    },
+    maxFiles: 1,
+    onDrop: (acceptedFiles: FileWithPath[]) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const fileWithPreview: FileWithPreview = Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        });
+        setSelectedFile(fileWithPreview);
+        setIsDialogOpen(true);
+      }
+    },
+  });
 
-  const handleImageSelect = (file: File, dataUrl: string) => {
-    setImageSrc(dataUrl);
-    // Reset crop settings when new image is selected
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-    setCroppedAreaPixels(null);
+  const handleCropComplete = (croppedImage: string) => {
+    onCropComplete(croppedImage);
+    setCroppedImages((prev) => [...prev, croppedImage]);
+    setSelectedFile(null);
   };
 
-  const handleCrop = async () => {
-    if (!(imageSrc && croppedAreaPixels)) {
-      return;
-    }
-
-    try {
-      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-      onCropComplete(croppedImage);
-    } catch (_e) {
-      // Handle crop error silently
-    }
-  };
-
-  const handleClear = () => {
-    setImageSrc(null);
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-    setCroppedAreaPixels(null);
+  const handleAddAnother = () => {
+    setSelectedFile(null);
+    setIsDialogOpen(false);
   };
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      {!imageSrc && (
-        <div>
-          <h2 className="mb-2 font-semibold text-lg">
-            Upload Photo for Member Card
-          </h2>
-          <p className="mb-4 text-muted-foreground text-sm">
-            Upload a photo and crop it to fit the member card dimensions (2.5cm
-            × 3cm)
-          </p>
-          <ImageUpload
-            onClear={handleClear}
-            onImageSelect={handleImageSelect}
-            selectedImage={imageSrc}
-          />
-        </div>
-      )}
+      <div>
+        <h2 className="mb-2 font-semibold text-lg">
+          Upload Photos for Member Cards
+        </h2>
+        <p className="mb-4 text-muted-foreground text-sm">
+          Upload photos and crop them to fit the member card dimensions (2.5cm ×
+          3cm)
+        </p>
+      </div>
 
-      {imageSrc && (
+      {/* Upload Area */}
+      <Card>
+        <div
+          {...getRootProps()}
+          className={`flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
+            isDragActive
+              ? 'border-primary bg-primary/5'
+              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+          }
+          `}
+        >
+          <input {...getInputProps()} />
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div
+              className={`flex h-16 w-16 items-center justify-center rounded-full ${isDragActive ? 'bg-primary/10' : 'bg-gray-100'}
+            `}
+            >
+              {isDragActive ? (
+                <Upload className="h-8 w-8 text-primary" />
+              ) : (
+                <ImageIcon className="h-8 w-8 text-gray-400" />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-medium text-lg">
+                {isDragActive
+                  ? 'Drop your image here'
+                  : 'Upload Photo for Member Card'}
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                {isDragActive
+                  ? 'Release to upload'
+                  : 'Drag & drop an image here, or click to browse'}
+              </p>
+              <p className="text-muted-foreground text-xs">
+                Supported formats: JPG, PNG, GIF (max 10MB)
+              </p>
+            </div>
+
+            {!isDragActive && (
+              <Button className="mt-4" variant="outline">
+                <Upload className="mr-2 h-4 w-4" />
+                Choose File
+              </Button>
+            )}
+          </div>
+        </div>
+      </Card>
+
+      {/* Cropped Images Preview */}
+      {croppedImages.length > 0 && (
         <Card className="p-6">
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="font-semibold text-lg">Crop Your Photo</h2>
+                <h3 className="font-semibold text-lg">
+                  Cropped Photos ({croppedImages.length})
+                </h3>
                 <p className="text-muted-foreground text-sm">
-                  Adjust the crop area to fit the member card dimensions
+                  Photos ready for printing on member cards
                 </p>
               </div>
-              <Button onClick={handleClear} size="sm" variant="outline">
-                Choose Different Photo
+              <Button
+                className="flex items-center gap-2"
+                onClick={handleAddAnother}
+                size="sm"
+                variant="outline"
+              >
+                <Plus className="h-4 w-4" />
+                Add Another
               </Button>
             </div>
 
-            <div className="relative h-96 w-full overflow-hidden rounded-lg bg-gray-100">
-              <Cropper
-                aspect={2.5 / 3}
-                crop={crop}
-                cropShape="rect"
-                image={imageSrc}
-                onCropChange={setCrop}
-                onCropComplete={onCropCompleteCallback}
-                onZoomChange={setZoom}
-                showGrid={true}
-                zoom={zoom}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label className="font-medium text-sm" htmlFor="zoom-slider">
-                  Zoom: {Math.round(zoom * 100)}%
-                </Label>
-                <input
-                  className="mt-1 w-full"
-                  id="zoom-slider"
-                  max={3}
-                  min={1}
-                  onChange={(e) => setZoom(Number(e.target.value))}
-                  step={0.1}
-                  type="range"
-                  value={zoom}
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  className="flex-1"
-                  disabled={!croppedAreaPixels}
-                  onClick={handleCrop}
+            <div className="grid grid-cols-6 gap-4 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12">
+              {croppedImages.map((imageSrc, index) => (
+                <div
+                  className="aspect-[2.5/3] overflow-hidden rounded border-2 border-gray-200 bg-white shadow-sm"
+                  key={index}
                 >
-                  Crop Photo & Add to Collection
-                </Button>
-              </div>
+                  <img
+                    alt={`Cropped photo ${index + 1}`}
+                    className="h-full w-full object-cover"
+                    src={imageSrc}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </Card>
       )}
+
+      {/* Image Cropper Dialog */}
+      <ImageCropper
+        dialogOpen={isDialogOpen}
+        onCropComplete={handleCropComplete}
+        selectedFile={selectedFile}
+        setDialogOpen={setIsDialogOpen}
+        setSelectedFile={setSelectedFile}
+      />
     </div>
   );
 }

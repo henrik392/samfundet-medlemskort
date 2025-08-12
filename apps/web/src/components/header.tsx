@@ -13,43 +13,8 @@ export default function Header() {
             Samfundet Bilde
           </Link>
 
-          <nav className="hidden items-center space-x-8 md:flex">
-            <Link
-              className="font-medium text-sm transition-colors hover:text-primary"
-              href="#features"
-            >
-              Features
-            </Link>
-            <Link
-              className="font-medium text-sm transition-colors hover:text-primary"
-              href="#docs"
-            >
-              Docs
-            </Link>
-            <Link
-              className="font-medium text-sm transition-colors hover:text-primary"
-              href="#pricing"
-            >
-              Pricing
-            </Link>
-          </nav>
-
           <div className="flex items-center gap-4">
             <ModeToggle />
-            <div className="hidden items-center gap-3 md:flex">
-              <Link
-                className="font-medium text-sm transition-colors hover:text-primary"
-                href="#login"
-              >
-                Log in
-              </Link>
-              <Link
-                className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-                href="#signup"
-              >
-                Sign up
-              </Link>
-            </div>
           </div>
         </div>
       </div>
