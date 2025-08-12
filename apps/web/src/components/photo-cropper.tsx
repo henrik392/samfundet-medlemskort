@@ -131,10 +131,12 @@ export function PhotoCropper({
   // Enkel opplastingsvisning
   if (showSimpleUpload) {
     return (
-      <div className="w-full max-w-2xl space-y-4">
-        <div className="space-y-2 text-center">
-          <h1 className="font-bold text-3xl">Medlemskortbilder</h1>
-          <p className="text-muted-foreground">
+      <div className="w-full max-w-2xl space-y-8">
+        <div className="space-y-3 text-center">
+          <h1 className="font-bold text-4xl tracking-tight">
+            Medlemskortbilder
+          </h1>
+          <p className="text-lg text-muted-foreground">
             Velg et bilde som tydelig viser ansiktet ditt
           </p>
         </div>
@@ -149,26 +151,26 @@ export function PhotoCropper({
             }`}
           >
             <input {...getInputProps()} />
-            <div className="flex flex-col items-center space-y-6 text-center">
+            <div className="flex flex-col items-center space-y-8 text-center">
               <div
-                className={`flex h-20 w-20 items-center justify-center rounded-full ${
+                className={`flex h-24 w-24 items-center justify-center rounded-full ${
                   isDragActive ? 'bg-primary/10' : 'bg-gray-100'
                 }`}
               >
                 {isDragActive ? (
-                  <Upload className="h-10 w-10 text-primary" />
+                  <Upload className="h-12 w-12 text-primary" />
                 ) : (
-                  <ImageIcon className="h-10 w-10 text-gray-400" />
+                  <ImageIcon className="h-12 w-12 text-gray-400" />
                 )}
               </div>
 
-              <div className="space-y-3">
-                <h3 className="font-medium text-xl">
+              <div className="space-y-4">
+                <h2 className="font-semibold text-2xl">
                   {isDragActive
                     ? 'Slipp bildet ditt her'
                     : 'Dra og slipp bildet ditt'}
-                </h3>
-                <p className="text-muted-foreground">
+                </h2>
+                <p className="text-base text-muted-foreground">
                   eller klikk for å bla gjennom filene dine
                 </p>
               </div>
@@ -189,9 +191,11 @@ export function PhotoCropper({
   // Beskjæringsvisning
   return (
     <div className="w-full max-w-4xl space-y-6">
-      <div className="space-y-2 text-center">
-        <h2 className="font-bold text-2xl">Beskjær bildet ditt</h2>
-        <p className="text-muted-foreground">
+      <div className="space-y-3 text-center">
+        <h1 className="font-bold text-4xl tracking-tight">
+          Beskjær bildet ditt
+        </h1>
+        <p className="text-lg text-muted-foreground">
           Juster beskjæringsområdet til medlemskortstørrelse
         </p>
       </div>
