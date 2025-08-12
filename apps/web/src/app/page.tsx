@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PhotoCropper } from '@/components/photo-cropper';
 import { PrintPreview } from '@/components/print-preview';
 
@@ -10,6 +10,37 @@ export default function Home() {
   const [croppedImages, setCroppedImages] = useState<string[]>([]);
   const [currentState, setCurrentState] = useState<AppState>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // Add JSON-LD structured data for SEO
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Samfundet medlemskort – bildebeskjæring og utskrift',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      description:
+        'Nettapp som hjelper deg å lage og skrive ut profilbilde i riktig størrelse (2.5×3 cm) til Studentersamfundets medlemskort.',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'NOK',
+      },
+      url: 'https://samfundet-medlemskort.vercel.app/',
+      inLanguage: 'nb-NO',
+      provider: {
+        '@type': 'Organization',
+        name: 'Studentersamfundet i Trondhjem',
+        url: 'https://samfundet.no',
+      },
+    });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const handleFileSelected = (file: File) => {
     setSelectedFile(file);
@@ -32,6 +63,10 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8">
+      <h1 className="sr-only">
+        Lag og skriv ut profilbilde i riktig størrelse til Samfundets
+        medlemskort
+      </h1>
       <div
         className={`flex ${currentState === 'print' ? 'justify-center' : 'min-h-[calc(100vh-7rem)] items-center justify-center'}`}
       >
