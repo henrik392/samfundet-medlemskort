@@ -11,13 +11,13 @@ import {
   Printer,
   Scissors,
   Shield,
+  Trash2,
   Upload,
   Wifi,
 } from 'lucide-react';
 import NextImage from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -32,12 +32,14 @@ interface PrintPreviewProps {
   croppedImages: string[];
   onPrint: () => void;
   onAddAnother?: () => void;
+  onRemoveImage?: (index: number) => void;
 }
 
 export function PrintPreview({
   croppedImages,
   onPrint,
   onAddAnother,
+  onRemoveImage,
 }: PrintPreviewProps) {
   const printAreaRef = useRef<HTMLDivElement>(null);
   const [isTroubleshootingOpen, setIsTroubleshootingOpen] = useState(false);
@@ -183,91 +185,84 @@ export function PrintPreview({
     };
   }, [handlePrint]);
 
-  // Calculate grid layout - 8 photos per row, multiple rows
+  // Calculate grid layout - 8 photos per row for printing
   const photosPerRow = 8;
-  const rows = Math.ceil(croppedImages.length / photosPerRow);
-  const verticalGuides = Array.from(
-    { length: photosPerRow + 1 },
-    (_, k) => (k / photosPerRow) * 100
-  );
-  const horizontalGuides = Array.from(
-    { length: rows + 1 },
-    (_, k) => (k / rows) * 100
-  );
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4">
-      <div className="space-y-2 text-center">
-        <h2 className="font-bold text-xl">Klar for utskrift</h2>
-        <p className="text-muted-foreground text-sm">
+    <div className="mx-auto w-full max-w-4xl space-y-8">
+      <div className="space-y-3 text-center">
+        <h1 className="font-bold text-4xl tracking-tight">Klar for utskrift</h1>
+        <p className="text-lg text-muted-foreground">
           {croppedImages.length} bilde{croppedImages.length !== 1 ? 'r' : ''}{' '}
           klare for A4‑utskrift
         </p>
       </div>
 
       <div className="flex justify-center">
-        <Card className="w-fit">
-          <div
-            className="relative mx-auto overflow-hidden bg-white print:border-0"
-            ref={printAreaRef}
-            style={{
-              width: '320px', // A4 width scaled down (~38% of 210mm at 96dpi)
-              height: '453px', // A4 height scaled down (~38% of 297mm at 96dpi)
-              aspectRatio: '210/297',
-            }}
-          >
-            {/* A4‑papir-simulering */}
-            <div className="h-full p-4">
-              <div
-                className="grid h-full content-start gap-2"
-                style={{
-                  gridTemplateColumns: `repeat(${photosPerRow}, 1fr)`,
-                }}
-              >
-                {croppedImages.map((imageSrc) => (
-                  <div
-                    className="overflow-hidden border border-gray-200 bg-white"
-                    key={imageSrc}
-                    style={{
-                      width: '25mm', // 2.5cm
-                      height: '30mm', // 3cm
-                      aspectRatio: '2.5/3',
-                    }}
+        <div className="w-full max-w-3xl">
+          <div className="flex flex-wrap justify-center gap-2">
+            {croppedImages.map((imageSrc, index) => (
+              <div className="group relative p-2" key={imageSrc}>
+                <div
+                  className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-white shadow-sm transition-all group-hover:shadow-md"
+                  style={{
+                    width: '100px',
+                    height: '120px',
+                    aspectRatio: '2.5/3',
+                  }}
+                >
+                  <NextImage
+                    alt={`Medlemskortbilde ${index + 1}`}
+                    className="object-cover"
+                    fill
+                    sizes="100px"
+                    src={imageSrc}
+                    unoptimized
+                  />
+                </div>
+                {onRemoveImage && (
+                  <button
+                    className="-top-1 -right-1 absolute flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:bg-red-600 group-hover:opacity-100"
+                    onClick={() => onRemoveImage(index)}
+                    type="button"
                   >
-                    <div className="relative h-full w-full">
-                      <NextImage
-                        alt="Medlemskortbilde"
-                        className="object-cover"
-                        fill
-                        sizes="25mm"
-                        src={imageSrc}
-                        unoptimized
-                      />
-                    </div>
-                  </div>
-                ))}
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                )}
+                <p className="mt-2 text-center text-muted-foreground text-xs">
+                  Bilde {index + 1}
+                </p>
               </div>
-
-              {/* Skjærelinjer */}
-              <div className="pointer-events-none absolute inset-0 print:hidden">
-                {verticalGuides.map((leftPct) => (
-                  <div
-                    className="absolute top-0 bottom-0 border-gray-400 border-l border-dashed opacity-30"
-                    key={`vertical-${leftPct}`}
-                    style={{ left: `${leftPct}%` }}
-                  />
-                ))}
-                {horizontalGuides.map((topPct) => (
-                  <div
-                    className="absolute right-0 left-0 border-gray-400 border-t border-dashed opacity-30"
-                    key={`horizontal-${topPct}`}
-                    style={{ top: `${topPct}%` }}
-                  />
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
-        </Card>
+        </div>
+      </div>
+
+      {/* Hidden print area for actual printing */}
+      <div className="hidden">
+        <div
+          className="grid gap-2"
+          ref={printAreaRef}
+          style={{
+            gridTemplateColumns: `repeat(${photosPerRow}, 1fr)`,
+          }}
+        >
+          {croppedImages.map((imageSrc, index) => (
+            <NextImage
+              alt={`Medlemskortbilde ${index + 1}`}
+              className="object-cover"
+              height={114}
+              key={`print-${imageSrc}`}
+              src={imageSrc}
+              style={{
+                width: '25mm',
+                height: '30mm',
+              }}
+              unoptimized
+              width={95}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Primary Actions */}
@@ -297,7 +292,6 @@ export function PrintPreview({
         {/* Visual separator with scroll hint */}
         <div className="flex flex-col items-center space-y-3 pt-2">
           <div className="h-px w-16 bg-border" />
-          <p className="text-muted-foreground text-sm">Mer hjelp nedenfor</p>
         </div>
 
         {/* Secondary Actions */}

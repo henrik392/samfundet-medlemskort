@@ -57,6 +57,17 @@ export default function Home() {
     setCurrentState('upload');
   };
 
+  const handleRemoveImage = (index: number) => {
+    setCroppedImages((prev) => {
+      const newImages = prev.filter((_, i) => i !== index);
+      // If no images left, go back to upload state
+      if (newImages.length === 0) {
+        setCurrentState('upload');
+      }
+      return newImages;
+    });
+  };
+
   const handlePrint = () => {
     // Print completed - could reset or stay on print view
   };
@@ -67,9 +78,7 @@ export default function Home() {
         Lag og skriv ut profilbilde i riktig størrelse til Samfundets
         medlemskort
       </h1>
-      <div
-        className={`flex ${currentState === 'print' ? 'justify-center' : 'min-h-[calc(100vh-7rem)] items-center justify-center'}`}
-      >
+      <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center">
         {currentState === 'upload' && (
           <PhotoCropper
             onFileSelected={handleFileSelected}
@@ -98,6 +107,7 @@ export default function Home() {
             croppedImages={croppedImages}
             onAddAnother={handleAddAnother}
             onPrint={handlePrint}
+            onRemoveImage={handleRemoveImage}
           />
         )}
       </div>
