@@ -32,7 +32,9 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <div className={`flex ${currentState === 'print' ? 'justify-center' : 'min-h-[calc(100vh-7rem)] items-center justify-center'}`}>
+      <div
+        className={`flex ${currentState === 'print' ? 'justify-center' : 'min-h-[calc(100vh-7rem)] items-center justify-center'}`}
+      >
         {currentState === 'upload' && (
           <PhotoCropper
             onFileSelected={handleFileSelected}

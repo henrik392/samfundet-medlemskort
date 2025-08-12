@@ -1,5 +1,5 @@
 {
-  "name": "samfundet-bilde",
+  "name": "samfundet-medlemskort",
   "private": true,
   "workspaces": [
     "apps/*",

@@ -3,7 +3,7 @@
 <bts>
 # Better-T-Stack Project Rules
 
-This is a samfundet-bilde project created with Better-T-Stack CLI.
+This is a samfundet-medlemskort project created with Better-T-Stack CLI.
 
 ## Project Structure
 
